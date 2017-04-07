@@ -16,15 +16,13 @@ public class Model {
 
     private final String from;
     private final String to;
-    private int queryPeriod;
     private Date start;
     private Date end;
 
-    public Model(String from, String to, int queryPeriod, Date start, Date end) {
+    public Model(String from, String to, Date start, Date end) {
         super();
         this.from = from;
         this.to = to;
-        this.queryPeriod = queryPeriod;
         this.start = start;
         this.end = end;
     }
@@ -37,18 +35,12 @@ public class Model {
         return to;
     }
 
-    public int getQueryPeriod() {
-        return queryPeriod;
-    }
-
     public String getStart() {
-        return Utils.SDF.format(start);
+        return Utils.DATE.format(start);
     }
 
     public String getEnd() {
-        //return Utils.SDF.format(end);
-        // TODO Fix target date processing.
-        return "20170420";
+        return Utils.DATE.format(end);
     }
 
     

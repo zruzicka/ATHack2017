@@ -22,8 +22,9 @@ public class ScriptGenerator {
         for (QueryContainer container : scenario.getModels()) {
             String restURL = restQuery.getQuery(container.getModel());
             container.setUrl(restURL);
-            String query = scriptQuery.getQuery(container);
-            sb.append(query);
+            sb.append(scriptQuery.getQuery(container));
+            sb.append("\n");
+            sb.append(scriptQuery.getDefinition(container));
             sb.append("\n");
         }
         return sb.toString();

@@ -16,7 +16,7 @@ public class QueryContainer {
 
     public QueryContainer(Model model) {
         super();
-        this.id = model.getFrom() +"-"+ model.getTo() +"-"+ model.getStart();
+        this.id = model.getFrom() +"-"+ model.getTo();// +"-"+ model.getStart();
         this.model = model;
     }
 
@@ -34,6 +34,10 @@ public class QueryContainer {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+    
+    public String getStartDate() {
+        return model.getStart();
     }
 
 }
