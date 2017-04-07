@@ -21,6 +21,7 @@
 			$harvest = new Harvest;
 			$harvest->odate = $row["odate"];
                         $harvest->idate = $row["idate"];
+                        $harvest->price = $row["price"];
 			$array[$rowCounter] = $harvest;
 			$rowCounter++;
 		}

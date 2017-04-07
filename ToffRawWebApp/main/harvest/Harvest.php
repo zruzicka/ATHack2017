@@ -11,9 +11,10 @@ class Harvest {
     
     var $idate;
     
-    
+    var $price;
     
     function toString() {
-        return $odate; 
+        return "Harvest[price: ". $this->price ."; odate: ". $this->odate ."; idate: ".$this->idate."]";
     }
+    
 }
