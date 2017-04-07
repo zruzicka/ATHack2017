@@ -3,3 +3,12 @@ https://developer.att.com/
 https://github.com/attm2x
 https://m2x.att.com/developer/sample-code
 https://m2x.att.com/devices?page=1
+
+
+https://www.netmetr.cz/cs/mapa.html
+http://opendata.cz/
+
+
+http://jpgraph.net/features/src/show-example.php?target=new_line1.php
+http://www.chartphp.com/demo/#database/line.php
+https://trends.google.co.in/trends/explore?date=2007-01-01%202015-03-31&q=%2Fm%2F04fzr5d&hl=en-US
