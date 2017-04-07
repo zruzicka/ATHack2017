@@ -24,10 +24,10 @@ public class HardcodedScenario implements Scenario {
         List<QueryContainer> models = new ArrayList();
         List<Definition> definitions = new ArrayList();
         try {
-            add(definitions, new Definition("VIE", "BKK", 1,10, Utils.DATE.parse("20170915"), 50));
-            add(definitions, new Definition("VIE", "BKK", 1,10, new Date(), 50));
-            add(definitions, new Definition("PRG", "BKK", 1,10, new Date(), 50));
-            add(definitions, new Definition("VIE", "PBM", 1,10, new Date(), 10));
+            add(definitions, new Definition("VIE", "BKK", 10,15, Utils.DATE.parse("20170915"), 30));
+            add(definitions, new Definition("VIE", "BKK", 10,15, new Date(), 30));
+            add(definitions, new Definition("PRG", "BKK", 10,15, new Date(), 30));
+            add(definitions, new Definition("VIE", "PBM", 10,15, new Date(), 15));
         } catch (ParseException e) {
             e.printStackTrace();
         }
