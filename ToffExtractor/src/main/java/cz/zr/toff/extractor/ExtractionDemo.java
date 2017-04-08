@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.Gson;
+
 import cz.zr.toff.extractor.model.Result;
+import cz.zr.toff.extractor.model.ResultCollection;
 
 /**
  * XML data extraction demo.
@@ -38,6 +42,8 @@ import cz.zr.toff.extractor.model.Result;
  */
 public class ExtractionDemo {
     // TODO Needs decomposition.
+    
+    private final ResultCollection finalResults = new ResultCollection();
 
     class StartsWithFilter implements FilenameFilter {
         private final String prefix;
@@ -75,6 +81,7 @@ public class ExtractionDemo {
                     System.out.println("Data source: " + file2.getName());
 
                     List<Result> results = getResultsFor(file2, from, to);
+                    //List<HashMap> finalResults = new ArrayList();
                     Set<Date> uniqueDates = new HashSet();
 
                     for (Result result : results) {
@@ -82,12 +89,23 @@ public class ExtractionDemo {
                         Date start = result.getStart();
                         if (start != null) {
                             if (!uniqueDates.contains(start)) {
+                                HashMap map = new HashMap();
+                                map.put("date", DATE.format(start));
+                                map.put("value", result.getPrice());
+                                
                                 uniqueDates.add(start);
-                                String itemArray = "array(\"" + DATE.format(start) + "\", " + result.getPrice() + "),";
-                                System.out.println(itemArray);
+                                //String itemArray = "array('date' => '" + DATE.format(start) + "', " + result.getPrice() + "),";
+                                //System.out.println(itemArray);
+                                //finalResults.add(map);
                             }
+                            finalResults.add(result);
                         }
+                        
                     }
+                    
+                    String json = new Gson().toJson(finalResults.getSortedResults());
+                    System.out.println(json);
+                    
                     System.out.println("-----");
                 }
             } catch (IOException e) {
