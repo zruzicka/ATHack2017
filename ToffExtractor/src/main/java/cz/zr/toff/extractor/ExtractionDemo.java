@@ -17,7 +17,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -73,9 +75,18 @@ public class ExtractionDemo {
                     System.out.println("Data source: " + file2.getName());
 
                     List<Result> results = getResultsFor(file2, from, to);
+                    Set<Date> uniqueDates = new HashSet();
 
                     for (Result result : results) {
-                        System.out.println(result);
+                        // System.out.println(result);
+                        Date start = result.getStart();
+                        if (start != null) {
+                            if (!uniqueDates.contains(start)) {
+                                uniqueDates.add(start);
+                                String itemArray = "array(\"" + DATE.format(start) + "\", " + result.getPrice() + "),";
+                                System.out.println(itemArray);
+                            }
+                        }
                     }
                     System.out.println("-----");
                 }

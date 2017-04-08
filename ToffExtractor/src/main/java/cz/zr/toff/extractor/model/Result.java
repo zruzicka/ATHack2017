@@ -36,6 +36,14 @@ public class Result {
     public String getTo() {
         return to;
     }
+    
+    public int getPrice() {
+        return price;
+    }
+    
+    public Date getStart() {
+        return start;
+    }
 
     @Override
     public String toString() {
