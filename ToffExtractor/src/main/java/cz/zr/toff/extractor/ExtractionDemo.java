@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,19 +32,22 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import cz.zr.toff.extractor.model.Result;
 import cz.zr.toff.extractor.model.ResultCollection;
 
 /**
  * XML data extraction demo.
- * 
+ *
  * @author ZRuzicka
  */
 public class ExtractionDemo {
     // TODO Needs decomposition.
-    
+
     private final ResultCollection finalResults = new ResultCollection();
+    private final List<Result> summary = new ArrayList<>();
 
     class StartsWithFilter implements FilenameFilter {
         private final String prefix;
@@ -53,18 +57,20 @@ public class ExtractionDemo {
             this.prefix = prefix;
         }
 
-        public boolean accept(File dir, String name) {
+        @Override
+		public boolean accept(File dir, String name) {
             return name.startsWith(prefix);
         }
     }
 
     public static void main(String[] args) {
-        new ExtractionDemo().parse();
+        ExtractionDemo extraction = new ExtractionDemo();
+		extraction.parse();
+		extraction.printSummary();
     }
 
     private void parse() {
-
-        File root = new File("e:\\ATHack2017\\SkyScanner\\v2\\");
+        File root = new File("c:\\GIT_other\\curl-repo\\toff\\2017_winter\\2017-10-21_1AM\\");
 
         File[] listFiles = root.listFiles(new StartsWithFilter("def"));
         for (File file : listFiles) {
@@ -73,10 +79,11 @@ public class ExtractionDemo {
             try {
                 List<String> lines = Files.readAllLines(file.toPath(), Charset.forName("UTF-8"));
                 String[] split = lines.get(0).split(";");
-                String from = split[0], to = split[1];
+                String from = split[0].trim(), to = split[1].trim();
 
                 // Loads data files with pattern "from-to*"
-                File[] definedFiles = root.listFiles(new StartsWithFilter(from + "-" + to));
+                String journeyPrefix = from + "-" + to;
+				File[] definedFiles = root.listFiles(new StartsWithFilter(journeyPrefix));
                 for (File file2 : definedFiles) {
                     System.out.println("Data source: " + file2.getName());
 
@@ -84,6 +91,8 @@ public class ExtractionDemo {
                     //List<HashMap> finalResults = new ArrayList();
                     Set<Date> uniqueDates = new HashSet();
 
+                    int minPrice = Integer.MAX_VALUE;
+                    Result minResult = null;
                     for (Result result : results) {
                         // System.out.println(result);
                         Date start = result.getStart();
@@ -91,21 +100,37 @@ public class ExtractionDemo {
                             if (!uniqueDates.contains(start)) {
                                 HashMap map = new HashMap();
                                 map.put("date", DATE.format(start));
-                                map.put("value", result.getPrice());
-                                
+                                int price = result.getPrice();
+								map.put("value", price);
+
                                 uniqueDates.add(start);
                                 //String itemArray = "array('date' => '" + DATE.format(start) + "', " + result.getPrice() + "),";
                                 //System.out.println(itemArray);
                                 //finalResults.add(map);
+
+                                if (price < minPrice) {
+                                	minPrice = price;
+                                	minResult = result;
+								}
                             }
                             finalResults.add(result);
                         }
-                        
+
                     }
-                    
-                    String json = new Gson().toJson(finalResults.getSortedResults());
-                    System.out.println(json);
-                    
+                    System.out.println("minPrice: "+ minPrice);
+                    System.out.println("minPriceResult: "+ minResult);
+                    if (minResult != null) {
+                    	summary.add(minResult);
+					}
+
+                    Gson gson = new Gson();
+                    final JsonObject json = new JsonObject();
+                    json.addProperty("minPrice", minPrice);
+                    //json.add("minPriceResult", gson.toJsonTree(minResult));
+                    JsonElement jsonElement = gson.toJsonTree(finalResults.getSortedResults());
+                    json.add("values", jsonElement);
+					String finalOutput = gson.toJson(json);
+                    System.out.println(finalOutput);
                     System.out.println("-----");
                 }
             } catch (IOException e) {
@@ -115,6 +140,14 @@ public class ExtractionDemo {
         }
 
     }
+
+    private void printSummary() {
+		Collections.sort(summary);
+		System.out.println("Summary:");
+		for (Result result : summary) {
+			System.out.println(result);
+		}
+	}
 
     private List<Result> getResultsFor(File xmlFile, String from, String to) {
         List<Result> results = new ArrayList();
@@ -162,7 +195,7 @@ public class ExtractionDemo {
     }
 
     private Node getElement(Element eElement, String key) {
-        return (Node) getElements(eElement, key).item(0);
+        return getElements(eElement, key).item(0);
     }
 
     private String get(Element eElement, String key) {

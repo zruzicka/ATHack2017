@@ -8,13 +8,13 @@
 
 package cz.zr.toff.generator;
 
-import cz.zr.toff.generator.scenario.HardcodedScenario;
+import cz.zr.toff.generator.scenario.HardcodedWinterScenario;
 
 public class Main {
 
     public static void main(String[] args) {
         ScriptGenerator generator = new ScriptGenerator();
-        String output = generator.generate(new HardcodedScenario());
+        String output = generator.generate(new HardcodedWinterScenario());
         System.out.println(output);
     }
 
